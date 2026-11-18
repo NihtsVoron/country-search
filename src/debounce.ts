@@ -2,7 +2,16 @@ export function debounce<A extends unknown[]>(
   fn: (...args: A) => void,
   delay: number,
 ): (...args: A) => void {
-  void fn;
-  void delay;
-  throw new Error('not implemented');
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  return (...args: A): void => {
+    if (timer !== undefined) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+      timer = undefined;
+      fn(...args);
+    }, delay);
+  };
 }
